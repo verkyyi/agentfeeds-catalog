@@ -21,7 +21,7 @@ def now_utc() -> str:
 
 def stream_summary(path: Path) -> dict:
     data = yaml.safe_load(path.read_text(encoding="utf-8"))
-    return {
+    summary = {
         "id": data["id"],
         "title": data["title"],
         "description": data["description"],
@@ -33,10 +33,21 @@ def stream_summary(path: Path) -> dict:
         "quality_tier": data["quality_tier"],
         "path": str(path.relative_to(ROOT)),
     }
+    for optional in ("catalog_tier", "catalog_order", "platforms", "requires"):
+        if optional in data:
+            summary[optional] = data[optional]
+    return summary
 
 
 def build_index() -> dict:
     streams = [stream_summary(path) for path in sorted(STREAMS_ROOT.glob("**/*.yaml"))]
+    streams.sort(
+        key=lambda stream: (
+            stream.get("catalog_tier", 99),
+            stream.get("catalog_order", 999),
+            stream["id"],
+        )
+    )
     return {
         "generated_at": now_utc(),
         "spec_version": "0.3",

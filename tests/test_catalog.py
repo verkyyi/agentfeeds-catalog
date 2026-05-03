@@ -25,6 +25,12 @@ def test_all_streams_validate():
         validator.validate_stream(path)
 
 
+def test_example_streams_validate():
+    validator = load_validator()
+    for path in sorted((ROOT / "examples" / "streams").glob("**/*.yaml")):
+        validator.validate_stream(path)
+
+
 def test_index_matches_streams():
     index = json.loads((ROOT / "catalog" / "INDEX.json").read_text(encoding="utf-8"))
     streams = sorted((ROOT / "catalog" / "streams").glob("**/*.yaml"))
@@ -32,6 +38,14 @@ def test_index_matches_streams():
     assert sorted(stream["path"] for stream in index["streams"]) == [
         str(path.relative_to(ROOT)) for path in streams
     ]
+    assert index["streams"] == sorted(
+        index["streams"],
+        key=lambda stream: (
+            stream.get("catalog_tier", 99),
+            stream.get("catalog_order", 999),
+            stream["id"],
+        ),
+    )
 
 
 def test_template_ids_are_unique():

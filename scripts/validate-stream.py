@@ -37,10 +37,14 @@ def validate_stream(path: Path) -> None:
                 raise ValueError(f"{path}: adapter.{required} is required for {adapter_kind}")
     if adapter_kind in {"rss", "ical"} and "url" not in stream["adapter"]:
         raise ValueError(f"{path}: adapter.url is required for {adapter_kind}")
-    if adapter_kind == "local_file" and "path" not in stream["adapter"]:
-        raise ValueError(f"{path}: adapter.path is required for local_file")
+    path_based_adapters = {"local_file", "local_directory", "markdown_vault", "local_git_status"}
+    if adapter_kind in path_based_adapters and "path" not in stream["adapter"]:
+        raise ValueError(f"{path}: adapter.path is required for {adapter_kind}")
     if adapter_kind == "local_command":
         raise ValueError(f"{path}: local_command templates are operator-local and are not allowed in the public catalog")
+    tcc_adapters = {"mac_calendar", "mac_reminders", "mac_notes", "mac_mail", "imessage_sqlite"}
+    if adapter_kind in tcc_adapters and "tcc_permission" not in stream["adapter"]:
+        raise ValueError(f"{path}: adapter.tcc_permission is required for {adapter_kind}")
 
 
 def main() -> int:
