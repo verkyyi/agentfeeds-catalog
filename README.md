@@ -41,6 +41,7 @@ uv run python scripts/build-index.py
 - Keep template descriptions short and operator-facing.
 - Use stable `category/name` template IDs.
 - Add or reuse an event schema for every stream definition.
+- Keep source-specific details in template YAML. The runtime should only need generic adapter primitives such as `json_http`, `filesystem_scan`, `apple_automation`, and `sqlite_query`.
 - Mark new templates `quality_tier: experimental` until they have real usage.
 - Do not include user-specific secrets, tokens, paths, or account IDs.
 - Do not add `local_command` templates to the public catalog. Command templates are operator-local, require explicit approval in the runtime, and belong under `~/.agentfeeds/templates/`.
@@ -58,10 +59,10 @@ Mac-native templates should never silently work around privacy prompts. If a req
 
 Permission mapping:
 
-- Calendar adapters require Calendar permission for the terminal or host process.
-- Reminders adapters require Reminders permission.
-- Notes adapters require Automation permission for Notes.app.
-- Mail adapters require Automation permission for Mail.app.
-- iMessage adapters require Full Disk Access for read-only access to `~/Library/Messages/chat.db`.
+- Calendar templates using `apple_automation` require Calendar permission for the terminal or host process.
+- Reminders templates using `apple_automation` require Reminders permission.
+- Notes templates using `apple_automation` require Automation permission for Notes.app.
+- Mail templates using `apple_automation` require Automation permission for Mail.app.
+- iMessage templates using `sqlite_query` require Full Disk Access for read-only access to `~/Library/Messages/chat.db`.
 - Safari Reading List reads `~/Library/Safari/Bookmarks.plist` and does not require a TCC prompt.
 - Recent Downloads reads `~/Downloads` and does not require a TCC prompt.
