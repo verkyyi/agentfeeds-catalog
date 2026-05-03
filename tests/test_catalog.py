@@ -34,9 +34,15 @@ def test_index_matches_streams():
     ]
 
 
-def test_provider_ids_are_unique():
+def test_template_ids_are_unique():
     ids = []
     for path in sorted((ROOT / "catalog" / "streams").glob("**/*.yaml")):
         ids.append(yaml.safe_load(path.read_text(encoding="utf-8"))["id"])
     duplicates = sorted({stream_id for stream_id in ids if ids.count(stream_id) > 1})
     assert duplicates == []
+
+
+def test_public_catalog_does_not_ship_local_command_templates():
+    for path in sorted((ROOT / "catalog" / "streams").glob("**/*.yaml")):
+        stream = yaml.safe_load(path.read_text(encoding="utf-8"))
+        assert stream["adapter"]["kind"] != "local_command", path

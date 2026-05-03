@@ -1,8 +1,10 @@
-# Agent Feeds Catalog
+# Agent Feeds Template Catalog
 
-Built-in provider definitions and schemas for Agent Feeds.
+Built-in template definitions and schemas for Agent Feeds.
 
-This repo hosts the public catalog consumed by the Agent Feeds core CLI. Providers are YAML stream definitions under `catalog/streams/`; schemas live under `catalog/schemas/`.
+This repo hosts the public catalog consumed by the Agent Feeds skill runtime. Templates are YAML stream definitions under `catalog/streams/`; schemas live under `catalog/schemas/`.
+
+The Agent Feeds skill bundle ships a frozen snapshot of this catalog for offline first-run discovery. Runtime installs can still refresh `~/.agentfeeds/catalog-cache/` from this repo or from a local checkout with `AGENTFEEDS_CATALOG_DIR`.
 
 ## Layout
 
@@ -31,11 +33,12 @@ Regenerate the catalog index after changing streams:
 uv run python scripts/build-index.py
 ```
 
-## Provider Guidelines
+## Template Guidelines
 
-- Prefer providers that require no authentication.
-- Keep provider descriptions short and operator-facing.
-- Use stable `category/name` provider IDs.
+- Prefer templates that require no authentication.
+- Keep template descriptions short and operator-facing.
+- Use stable `category/name` template IDs.
 - Add or reuse an event schema for every stream definition.
-- Mark new providers `quality_tier: experimental` until they have real usage.
+- Mark new templates `quality_tier: experimental` until they have real usage.
 - Do not include user-specific secrets, tokens, paths, or account IDs.
+- Do not add `local_command` templates to the public catalog. Command templates are operator-local, require explicit approval in the runtime, and belong under `~/.agentfeeds/templates/`.

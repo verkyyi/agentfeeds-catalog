@@ -1,7 +1,7 @@
 [project]
 name = "agentfeeds-catalog"
 version = "0.1.0"
-description = "Built-in provider catalog for Agent Feeds"
+description = "Built-in template catalog for Agent Feeds"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"

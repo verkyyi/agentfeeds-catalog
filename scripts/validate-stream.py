@@ -40,11 +40,7 @@ def validate_stream(path: Path) -> None:
     if adapter_kind == "local_file" and "path" not in stream["adapter"]:
         raise ValueError(f"{path}: adapter.path is required for local_file")
     if adapter_kind == "local_command":
-        command = stream["adapter"].get("command")
-        if not isinstance(command, list) or not command or not all(isinstance(item, str) for item in command):
-            raise ValueError(f"{path}: adapter.command must be a non-empty string array for local_command")
-        if stream["mode"] == "event" and stream["adapter"].get("parse") != "json":
-            raise ValueError(f"{path}: local_command event streams require adapter.parse: json")
+        raise ValueError(f"{path}: local_command templates are operator-local and are not allowed in the public catalog")
 
 
 def main() -> int:
